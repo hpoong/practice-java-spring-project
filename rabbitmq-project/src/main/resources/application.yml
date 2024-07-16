@@ -6,3 +6,11 @@ logging:
   config: classpath:logback/logback-srping.xml
   level:
     root: info
+
+
+spring:
+  rabbitmq:
+    host: ${Rabbit_Host}
+    port: ${Rabbit_Port}
+    username: ${Rabbit_UserName}
+    password: ${Rabbit_Password}
