@@ -1,6 +1,7 @@
 package com.hopoong.rabbitmq.config;
 
 import org.springframework.amqp.core.*;
+import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -154,8 +155,6 @@ public class RabbitmqConfig {
         return BindingBuilder.bind(fanoutQueue1).to(fanoutExchange);
     }
 
-
-
     @Bean
     public Binding bindingHeadersQueue1(Queue headersQueue1, HeadersExchange headersExchange) {
         // 모든 헤더 조건이 일치해야 함 (whereAll 사용)
@@ -186,6 +185,16 @@ public class RabbitmqConfig {
     @Bean
     public Binding bindingTopicQueue(Queue topicQueue, TopicExchange topicExchange) {
         return BindingBuilder.bind(topicQueue).to(topicExchange).with("topic.routing.#");
+    }
+
+    @Bean
+    public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory(ConnectionFactory connectionFactory) {
+        // 순차 처리
+        SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
+        factory.setConnectionFactory(connectionFactory);
+        factory.setPrefetchCount(1);            // 하나의 메시지
+        factory.setConcurrentConsumers(1);      // 하나의 소비자
+        return factory;
     }
 
 }
