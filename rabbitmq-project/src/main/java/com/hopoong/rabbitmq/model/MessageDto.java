@@ -10,8 +10,8 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 public class MessageDto {
-    private String title;
-    private String message;
+    private String title = "title-test";
+    private String message = "message-test";
 
     @Builder
     public MessageDto(String title, String message) {

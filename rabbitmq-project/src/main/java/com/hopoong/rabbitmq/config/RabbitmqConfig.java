@@ -30,7 +30,6 @@ public class RabbitmqConfig {
 
 
 
-
 // Exchange 유형 설명
 // RabbitMQ Direct Exchange : ‘라우팅 키‘를 기반으로 메시지를 큐로 라우팅합니다.
 //                             바인딩 키가 메시지의 라우팅 키와 '정확히 일치하는 큐'로 메시지가 라우팅됩니다.
@@ -68,71 +67,125 @@ public class RabbitmqConfig {
         return rabbitTemplate;
     }
 
+
+    // Exchange *********************************
     @Bean
     public DirectExchange directExchange() {
         return new DirectExchange("direct-exchange");
     }
 
-//    @Bean
-//    public FanoutExchange fanoutExchange() {
-//        return new FanoutExchange("fanout-exchange");
-//    }
-//
-//    @Bean
-//    public HeadersExchange headersExchange() {
-//        return new HeadersExchange("headers-exchange");
-//    }
-//
-//    @Bean
-//    public TopicExchange topicExchange() {
-//        return new TopicExchange("topic-exchange");
-//    }
-
     @Bean
-    public Queue queue1() {
-        return new Queue("queue1", false); //  서버가 재시작되더라도 큐와 큐에 저장된 메시지가 사라짐.
+    public FanoutExchange fanoutExchange() {
+        return new FanoutExchange("fanout-exchange");
     }
 
-//    @Bean
-//    public Queue queue2() {
-//        return new Queue("queue2");
-//    }
-//
-//    @Bean
-//    public Queue queue3() {
-//        return new Queue("queue3");
-//    }
-//
-//    @Bean
-//    public Queue queue4() {
-//        return new Queue("queue4");
-//    }
-//
-//    @Bean
-//    public Queue queue5() {
-//        return new Queue("queue5");
-//    }
-
     @Bean
-    public Binding binding1a(Queue queue1, DirectExchange directExchange) {
-        return BindingBuilder.bind(queue1).to(directExchange).with("routingKey1");
+    public HeadersExchange headersExchange() {
+        return new HeadersExchange("headers-exchange");
     }
 
-//    @Bean
-//    public Binding binding2a(Queue queue2, FanoutExchange fanoutExchange) {
-//        return BindingBuilder.bind(queue2).to(fanoutExchange);
-//    }
-//
-//    @Bean
-//    public Binding binding3a(Queue queue3, HeadersExchange headersExchange) {
-//        Map<String, Object> headers = new HashMap<>();
-//        headers.put("headerKey", "headerValue");
-//        return BindingBuilder.bind(queue3).to(headersExchange).whereAll(headers).match();
-//    }
-//
-//    @Bean
-//    public Binding binding4a(Queue queue4, TopicExchange topicExchange) {
-//        return BindingBuilder.bind(queue4).to(topicExchange).with("topic.routing.#");
-//    }
+    @Bean
+    public TopicExchange topicExchange() {
+        return new TopicExchange("topic-exchange");
+    }
+
+    // Direct Exchange *********************************
+    @Bean
+    public Queue directQueue() {
+        return new Queue("directQueue", false);
+    }
+
+    @Bean
+    public Queue directQueue1() {
+        return new Queue("directQueue1", false);
+    }
+
+    // Fanout Exchange *********************************
+    @Bean
+    public Queue fanoutQueue() {
+        return new Queue("fanoutQueue", false);
+    }
+
+    @Bean
+    public Queue fanoutQueue1() {
+        return new Queue("fanoutQueue1", false);
+    }
+
+    // Headers Exchange *********************************
+    @Bean
+    public Queue headersQueue1() {
+        return new Queue("headersQueue1", false);
+    }
+
+    @Bean
+    public Queue headersQueue2() {
+        return new Queue("headersQueue2", false);
+    }
+
+    @Bean
+    public Queue headersQueue3() {
+        return new Queue("headersQueue3", false);
+    }
+
+    // Topic Exchange *********************************
+    @Bean
+    public Queue topicQueue() {
+        return new Queue("topicQueue", false);
+    }
+
+
+    @Bean
+    public Binding bindingDirectQueue(Queue directQueue, DirectExchange directExchange) {
+        return BindingBuilder.bind(directQueue).to(directExchange).with("routingKey1");
+    }
+
+    @Bean
+    public Binding bindingDirectQueue1(Queue directQueue1, DirectExchange directExchange) {
+        return BindingBuilder.bind(directQueue1).to(directExchange).with("routingKey2");
+    }
+
+    @Bean
+    public Binding bindingFanoutQueue(Queue fanoutQueue, FanoutExchange fanoutExchange) {
+        return BindingBuilder.bind(fanoutQueue).to(fanoutExchange);
+    }
+
+    @Bean
+    public Binding bindingFanoutQueue1(Queue fanoutQueue1, FanoutExchange fanoutExchange) {
+        return BindingBuilder.bind(fanoutQueue1).to(fanoutExchange);
+    }
+
+
+
+    @Bean
+    public Binding bindingHeadersQueue1(Queue headersQueue1, HeadersExchange headersExchange) {
+        // 모든 헤더 조건이 일치해야 함 (whereAll 사용)
+        Map<String, Object> headers = new HashMap<>();
+        headers.put("headerKey", "headerValue");
+        return BindingBuilder.bind(headersQueue1).to(headersExchange).whereAll(headers).match();
+    }
+
+    @Bean
+    public Binding bindingHeadersQueue2(Queue headersQueue2, HeadersExchange headersExchange) {
+        // 조건: 하나의 헤더 조건이라도 일치하면 됨 (whereAny 사용)
+        Map<String, Object> headers = new HashMap<>();
+        headers.put("headerKey1", "headerValue1");
+        headers.put("headerKey2", "headerValue2");
+        return BindingBuilder.bind(headersQueue2).to(headersExchange).whereAny(headers).match();
+    }
+
+    @Bean
+    public Binding bindingHeadersQueue3(Queue headersQueue3, HeadersExchange headersExchange) {
+        // 모든 헤더 조건이 일치해야 함 (whereAll 사용)
+        Map<String, Object> headers = new HashMap<>();
+        headers.put("headerKey3", "headerValue3");
+        headers.put("headerKey4", "headerValue4");
+        headers.put("headerKey5", "headerValue5");
+        return BindingBuilder.bind(headersQueue3).to(headersExchange).whereAll(headers).match();
+    }
+
+    @Bean
+    public Binding bindingTopicQueue(Queue topicQueue, TopicExchange topicExchange) {
+        return BindingBuilder.bind(topicQueue).to(topicExchange).with("topic.routing.#");
+    }
 
 }

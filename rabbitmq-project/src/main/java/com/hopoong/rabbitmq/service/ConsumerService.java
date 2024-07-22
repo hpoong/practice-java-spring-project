@@ -11,29 +11,44 @@ import org.springframework.stereotype.Service;
 public class ConsumerService {
 
 
-    @RabbitListener(queues = "queue1")
-    public void receiveMessage(String msg) {
-        System.out.println("Queue1 내의 결과 값을 반환 받습니다 ::::  " + msg);
+    @RabbitListener(queues = "directQueue")
+    public void receiveDirectQueueMessage(String msg) {
+        log.info("directQueue 내의 결과 값을 반환 받습니다 ::::  {}", msg);
     }
 
-//    @RabbitListener(queues = "queue2")
-//    public void receiveMessage2(String msg) {
-//        System.out.println("Queue2 내의 결과 값을 반환 받습니다 ::::  " + msg);
-//    }
-//
-//    @RabbitListener(queues = "queue3")
-//    public void receiveMessage3(String msg) {
-//        System.out.println("Queue3 내의 결과 값을 반환 받습니다 ::::  " + msg);
-//    }
-//
-//    @RabbitListener(queues = "queue4")
-//    public void receiveMessage4(String msg) {
-//        System.out.println("Queue4 내의 결과 값을 반환 받습니다 ::::  " + msg);
-//    }
-//
-//    @RabbitListener(queues = "queue5")
-//    public void receiveMessage5(String msg) {
-//        System.out.println("Queue5 내의 결과 값을 반환 받습니다 ::::  " + msg);
-//    }
+    @RabbitListener(queues = "directQueue1")
+    public void receiveDirectQueueMessage1(String msg) {
+        log.info("directQueue1 내의 결과 값을 반환 받습니다 ::::  {}", msg);
+    }
+
+    @RabbitListener(queues = "fanoutQueue")
+    public void receiveFanoutQueueMessage(String msg) {
+        log.info("fanoutQueue 내의 결과 값을 반환 받습니다 ::::  {}", msg);
+    }
+
+    @RabbitListener(queues = "fanoutQueue1")
+    public void receiveFanoutQueueMessage1(String msg) {
+        log.info("fanoutQueue1 내의 결과 값을 반환 받습니다 ::::  {}", msg);
+    }
+
+    @RabbitListener(queues = "headersQueue1")
+    public void receiveHeadersQueueMessage1(String msg) {
+        log.info("headersQueue1 내의 결과 값을 반환 받습니다 ::::  {}", msg);
+    }
+
+    @RabbitListener(queues = "headersQueue2")
+    public void receiveHeadersQueueMessage2(String msg) {
+        log.info("headersQueue2 내의 결과 값을 반환 받습니다 ::::  {}", msg);
+    }
+
+    @RabbitListener(queues = "headersQueue3")
+    public void receiveHeadersQueueMessage3(String msg) {
+        log.info("headersQueue3 내의 결과 값을 반환 받습니다 ::::  {}", msg);
+    }
+
+    @RabbitListener(queues = "topicQueue")
+    public void receiveTopicQueueMessage(String msg) {
+        log.info("topicQueue 내의 결과 값을 반환 받습니다 ::::  {}", msg);
+    }
 
 }

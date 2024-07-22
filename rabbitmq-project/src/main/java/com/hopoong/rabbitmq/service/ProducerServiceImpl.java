@@ -1,5 +1,6 @@
 package com.hopoong.rabbitmq.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hopoong.rabbitmq.model.MessageDto;
 import lombok.RequiredArgsConstructor;
@@ -22,39 +23,50 @@ public class ProducerServiceImpl implements ProducerService {
     private final ObjectMapper objectMapper;
 
     private final DirectExchange directExchange;
-//
-//    private final FanoutExchange fanoutExchange;
-//
-//    private final HeadersExchange headersExchange;
-//
-//    private final TopicExchange topicExchange;
+
+    private final FanoutExchange fanoutExchange;
+
+    private final HeadersExchange headersExchange;
+
+    private final TopicExchange topicExchange;
 
 
     @Override
-    public void directSendMessage(MessageDto messageDto) {
-        try {
-            String objectToJSON = objectMapper.writeValueAsString(messageDto);
-            rabbitTemplate.convertAndSend(directExchange.getName(), "routingKey1", objectToJSON);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void directSendMessage(MessageDto messageDto) throws JsonProcessingException {
+        String objectToJSON = objectMapper.writeValueAsString(messageDto);
+        rabbitTemplate.convertAndSend(directExchange.getName(), "routingKey1", objectToJSON);
     }
 
-//    @Override
-//    public void fanoutSendMessage(MessageDto messageDto) {
-//        rabbitTemplate.convertAndSend(fanoutExchange.getName(), "", messageDto);
-//    }
-//
-//    @Override
-//    public void headerSendMessage(MessageDto messageDto) {
-//        rabbitTemplate.convertAndSend(headersExchange.getName(), "", messageDto, message -> {
-//            message.getMessageProperties().getHeaders().put("headerKey", "headerValue");
-//            return message;
-//        });
-//    }
-//
-//    @Override
-//    public void topicSendMessage(MessageDto messageDto) {
-//        rabbitTemplate.convertAndSend(topicExchange.getName(), "topic.routing.specific", messageDto);
-//    }
+    @Override
+    public void fanoutSendMessage(MessageDto messageDto) throws JsonProcessingException {
+        String objectToJSON = objectMapper.writeValueAsString(messageDto);
+        rabbitTemplate.convertAndSend(fanoutExchange.getName(), "", objectToJSON);
+    }
+
+    @Override
+    public void headerSendMessage(MessageDto messageDto) throws JsonProcessingException {
+        String objectToJSON = objectMapper.writeValueAsString(messageDto);
+        rabbitTemplate.convertAndSend(headersExchange.getName(), "", objectToJSON, message -> {
+            message.getMessageProperties().getHeaders().put("headerKey", "headerValue");
+            return message;
+        });
+    }
+
+    @Override
+    public void headerSendMessage(MessageDto messageDto, Object... headers) throws JsonProcessingException {
+        String objectToJSON = objectMapper.writeValueAsString(messageDto);
+        rabbitTemplate.convertAndSend(headersExchange.getName(), "", objectToJSON, message -> {
+            for (int i = 0; i < headers.length; i += 2) {
+                message.getMessageProperties().getHeaders().put(headers[i].toString(), headers[i + 1]);
+            }
+            return message;
+        });
+    }
+
+
+    @Override
+    public void topicSendMessage(MessageDto messageDto) throws JsonProcessingException {
+        String objectToJSON = objectMapper.writeValueAsString(messageDto);
+        rabbitTemplate.convertAndSend(topicExchange.getName(), "topic.routing.specific", objectToJSON);
+    }
 }
