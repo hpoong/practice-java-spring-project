@@ -44,7 +44,6 @@ public class FluxClass {
         Flux<String> concatFlux = Flux.concat(fluxObj1, fluxObj2);
         concatFlux.subscribe(System.out::println);
         System.out.println("================================= 6");
-//sdsds
     }
 
 
