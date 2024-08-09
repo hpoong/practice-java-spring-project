@@ -22,6 +22,8 @@ dependencies {
 	// springframework
 	implementation 'org.springframework.boot:spring-boot-starter-web'		// web
 
+	// elasticsearch
+	implementation group: 'org.springframework.data', name: 'spring-data-elasticsearch', version: '5.2.4'
 
 	// lombok
 	compileOnly 'org.projectlombok:lombok:1.18.32'
