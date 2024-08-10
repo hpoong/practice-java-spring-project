@@ -8,3 +8,7 @@ logging:
   config: classpath:logback/logback-srping.xml
   level:
     root: info
+
+spring:
+  elastic:
+    url: ${Elastic_URL}
