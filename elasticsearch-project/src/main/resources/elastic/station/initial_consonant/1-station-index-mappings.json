@@ -1,0 +1,18 @@
+{
+  "properties": {
+    "stationNm": {
+      "type": "text",
+      "analyzer": "korean_chosung_analyzer",
+      "search_analyzer": "korean_chosung_analyzer"
+    },
+    "lineNum": {
+      "type": "keyword"
+    },
+    "stationCd": {
+      "type": "keyword"
+    },
+    "frCode": {
+      "type": "keyword"
+    }
+  }
+}
