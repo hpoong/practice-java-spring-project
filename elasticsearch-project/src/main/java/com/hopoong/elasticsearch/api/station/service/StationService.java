@@ -3,8 +3,8 @@ package com.hopoong.elasticsearch.api.station.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hopoong.elasticsearch.api.station.model.StationInfoModel;
-import com.hopoong.elasticsearch.api.station.repository.StationRepository;
-import com.hopoong.elasticsearch.document.StationDocument;
+import com.hopoong.elasticsearch.api.station.repository.StationInfoRepository;
+import com.hopoong.elasticsearch.document.StationInfoDocument;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
@@ -25,7 +25,7 @@ import java.util.stream.StreamSupport;
 @RequiredArgsConstructor
 public class StationService {
 
-    private final StationRepository stationRepository;
+    private final StationInfoRepository stationInfoRepository;
     private final ElasticsearchOperations elasticsearchOperations;
 
 
@@ -38,8 +38,8 @@ public class StationService {
         // JSON → JAVA Object
         List<StationInfoModel> stationInfoList = objectMapper.readValue(inputStream, new TypeReference<List<StationInfoModel>>() {});
 
-        List<StationDocument> stationDocument = stationInfoList.stream().map(data ->
-            StationDocument.builder()
+        List<StationInfoDocument> stationInfoDocument = stationInfoList.stream().map(data ->
+            StationInfoDocument.builder()
                 .lineNum(data.getLineNum())
                 .stationCd(data.getStationCd())
                 .stationNm(data.getStationNm())
@@ -47,18 +47,18 @@ public class StationService {
                 .build()
         ).collect(Collectors.toList());
 
-        stationRepository.saveAll(stationDocument);
+        stationInfoRepository.saveAll(stationInfoDocument);
     }
 
     @Transactional
     public void deleteStationData() {
-        stationRepository.deleteAll();
+        stationInfoRepository.deleteAll();
     }
 
 
     @Transactional(readOnly = true)
     public List<StationInfoModel> selectStationData() {
-        return StreamSupport.stream(stationRepository.findAll().spliterator(), false)
+        return StreamSupport.stream(stationInfoRepository.findAll().spliterator(), false)
                 .map(data -> new StationInfoModel(data.getLineNum(), data.getStationCd(), data.getStationNm(), data.getFrCode()))
                 .collect(Collectors.toList());
     }
@@ -71,40 +71,21 @@ public class StationService {
     }
 
 
-    public List<StationInfoModel> autocompleteStationName(String type, String input) {
+    @Transactional(readOnly = true)
+    public List<StationInfoModel> autocompleteStationName(String stationName) {
 
-        if("word".equals(type)) {
-            Criteria criteria = Criteria.where("stationNm").startsWith(input);
-            CriteriaQuery query = new CriteriaQuery(criteria);
+        Criteria criteria = Criteria.where("stationNm").contains(stationName);
+        CriteriaQuery query = new CriteriaQuery(criteria);
 
-            SearchHits<StationDocument> searchHits = elasticsearchOperations.search(query, StationDocument.class);
+        SearchHits<StationInfoDocument> searchHits = elasticsearchOperations.search(query, StationInfoDocument.class);
 
-            return searchHits.map(hit -> hit.getContent()).toList().stream().map(
-                    data -> new StationInfoModel(data.getLineNum(), data.getStationCd(), data.getStationNm(), data.getFrCode())
-            ).collect(Collectors.toList());
-            // return searchHits.map(hit -> hit.getContent()).toList();
-        }
-
-        else {
-
-//            String initialConsonants = extractInitialConsonants(input);
-//            Criteria criteria = Criteria.where("stationNm").matches(initialConsonants);
-//            CriteriaQuery query = new CriteriaQuery(criteria);
-//            SearchHits<StationDocument> searchHits = elasticsearchOperations.search(query, StationDocument.class);
-//            return searchHits.map(hit -> hit.getContent()).toList().stream().map(
-//                    data -> new StationInfoModel(data.getLineNum(), data.getStationCd(), data.getStationNm(), data.getFrCode())
-//            ).collect(Collectors.toList());
-
-
-//            Criteria criteria = Criteria.where("stationNm").matches(input);
-//            CriteriaQuery query = new CriteriaQuery(criteria);
-//            SearchHits<StationDocument> searchHits = elasticsearchOperations.search(query, StationDocument.class);
-//            return searchHits.map(hit -> hit.getContent()).toList().stream().map(
-//                    data -> new StationInfoModel(data.getLineNum(), data.getStationCd(), data.getStationNm(), data.getFrCode())
-//            ).collect(Collectors.toList());
-            return null;
-        }
+        return searchHits.map(hit -> hit.getContent()).toList().stream().map(
+                data -> new StationInfoModel(data.getLineNum(), data.getStationCd(), data.getStationNm(), data.getFrCode())
+        ).collect(Collectors.toList());
+        // return searchHits.map(hit -> hit.getContent()).toList();
     }
+
+
 
     public String extractInitialConsonants(String input) {
         StringBuilder result = new StringBuilder();

@@ -1,0 +1,25 @@
+{
+  "properties": {
+    "stationNmCn": {
+      "type": "text",
+      "analyzer": "chinese_analyzer"
+    },
+    "stationNmJp": {
+      "type": "text",
+      "analyzer": "japanese_analyzer"
+    },
+    "stationNmEn": {
+      "type": "text",
+      "analyzer": "multilingual_analyzer"
+    },
+    "lineNum": {
+      "type": "keyword"
+    },
+    "stationCd": {
+      "type": "keyword"
+    },
+    "frCode": {
+      "type": "keyword"
+    }
+  }
+}

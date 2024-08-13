@@ -11,13 +11,10 @@ import org.springframework.data.elasticsearch.annotations.Setting;
 
 @Data
 @NoArgsConstructor
-@Document(indexName = "station")
-//@Setting(settingPath = "/elastic/word/2-station-index-settings.json")
-//@Mapping(mappingPath = "/elastic/word/2-station-index-mappings.json")
-@Setting(settingPath = "/elastic/initial_consonant/1-station-index-settings.json")
-@Mapping(mappingPath = "/elastic/initial_consonant/1-station-index-mappings.json")
-public class StationDocument {
-
+@Document(indexName = "station_info")
+@Setting(settingPath = "/elastic/index_set/1-station-info-index-settings.json")
+@Mapping(mappingPath = "/elastic/index_set/1-station-info-index-mappings.json")
+public class StationInfoDocument {
 
     @Id
     private String id;
@@ -28,7 +25,7 @@ public class StationDocument {
 
 
     @Builder
-    public StationDocument(String lineNum, String stationCd, String stationNm, String frCode) {
+    public StationInfoDocument(String lineNum, String stationCd, String stationNm, String frCode) {
         this.lineNum = lineNum;
         this.stationCd = stationCd;
         this.stationNm = stationNm;

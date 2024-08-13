@@ -14,7 +14,7 @@ public class CommonResponse {
     private String message;
     private String timestamp;
 
-    public CommonResponse(Boolean success,String type, String code, String message) {
+    public CommonResponse(Boolean success, String type, String code, String message) {
         this.success = success;
         this.type = type;
         this.code = code;

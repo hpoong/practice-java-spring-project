@@ -1,0 +1,19 @@
+{
+  "analysis": {
+    "analyzer": {
+      "chinese_analyzer": {
+        "type": "custom",
+        "tokenizer": "ik_max_word"
+      },
+      "japanese_analyzer": {
+        "type": "custom",
+        "tokenizer": "kuromoji_tokenizer"
+      },
+      "multilingual_analyzer": {
+        "type": "custom",
+        "tokenizer": "standard",
+        "filter": ["lowercase", "asciifolding"]
+      }
+    }
+  }
+}
