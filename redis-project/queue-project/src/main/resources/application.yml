@@ -1,0 +1,16 @@
+
+server:
+  port: 2343
+
+logging:
+  config: classpath:logback/logback-srping.xml
+  level:
+    root: info
+
+spring:
+  data:
+    redis:
+      host: ${Redis_Host}
+      port: ${Redis_Port}
+      timeout: 60000  # 타임아웃 시간을 60초로 설정 (밀리초 단위)
+      connect-timeout: 60000  # 연결 타임아웃 시간 (밀리초 단위)
