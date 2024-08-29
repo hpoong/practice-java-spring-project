@@ -49,50 +49,48 @@ public class AccountService {
 
 
 
-//    public void startTaskProcessor() {
-//        for (int i = 0; i < 10; i++) {
-//            taskExecutor.execute(() -> {
-//                while (true) {
-//                    try {
-//                        // BLPOP 또는 BRPOP으로 큐에서 대기하며 요소를 가져옴
-//                        AccountModel task = (AccountModel) redisTemplate.opsForList().rightPop(REDIS_QUEUE_KEY, 0, TimeUnit.SECONDS);
-//
-//                        if(task != null) {
-//                            processTask(task);
-//                        }
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                        break;
-//                    }
-//                }
-//            });
-//        }
-//    }
-
-    /*
-     * rightPop
-     */
     public void startTaskProcessor() {
-        new Thread(() -> {
-            while (true) {
-                try {
+        for (int i = 0; i < 10; i++) {
+            taskExecutor.execute(() -> {
+                while (true) {
+                    try {
+//                        AccountModel task = (AccountModel) redisTemplate.opsForList().rightPop(REDIS_QUEUE_KEY);
+//                        AccountModel task = (AccountModel) redisTemplate.opsForList().rightPop(REDIS_QUEUE_KEY, 0, TimeUnit.SECONDS);
 
-                    // TODO : after
-                    // BLPOP 또는 BRPOP으로 큐에서 대기하며 요소를 가져옴
-//                    AccountModel task = (AccountModel) redisTemplate.opsForList().rightPop(REDIS_QUEUE_KEY, 0, TimeUnit.SECONDS);
-
-                    // TODO : before
-                     AccountModel task = (AccountModel) redisTemplate.opsForList().rightPop(REDIS_QUEUE_KEY);
-                    if(task != null) {
-                        processTask(task);
+                        AccountModel task = (AccountModel) redisTemplate.opsForList().rightPop(REDIS_QUEUE_KEY, 1, TimeUnit.SECONDS);
+                        if (task != null) {
+                            processTask(task);
+                        } else {
+                            Thread.sleep(1000);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    break;
                 }
-            }
-        }).start();
+            });
+        }
     }
+
+
+//    /*
+//     * rightPop
+//     */
+//    public void startTaskProcessor() {
+//        new Thread(() -> {
+//            while (true) {
+//                try {
+//                    AccountModel task = (AccountModel) redisTemplate.opsForList().rightPop(REDIS_QUEUE_KEY, 1, TimeUnit.SECONDS);
+//                    if (task != null) {
+//                        processTask(task);
+//                    } else {
+//                        Thread.sleep(1000);
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }).start();
+//    }
 
 
     private void processTask(AccountModel task) throws InterruptedException {
