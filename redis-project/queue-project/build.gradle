@@ -23,6 +23,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'			// web
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'	// redis
 
+	// jedis
+	implementation group: 'redis.clients', name: 'jedis', version: '5.1.5'
+
 
 	// lombok
 	compileOnly 'org.projectlombok:lombok:1.18.32'

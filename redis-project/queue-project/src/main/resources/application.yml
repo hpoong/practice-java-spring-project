@@ -8,6 +8,8 @@ logging:
     root: info
 
 spring:
+  jmx:
+    enabled: false
   data:
     redis:
       host: ${Redis_Host}

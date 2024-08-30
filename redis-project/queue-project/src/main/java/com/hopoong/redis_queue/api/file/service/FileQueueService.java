@@ -1,5 +1,7 @@
 package com.hopoong.redis_queue.api.file.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hopoong.redis_queue.api.file.model.FileQueueModel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -7,6 +9,8 @@ import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -28,6 +32,55 @@ public class FileQueueService {
 
     private final RedisTemplate<String, Object> redisTemplate;
 
+    private final JedisPool jedisPool;
+
+    private final ObjectMapper objectMapper;
+
+
+    /*
+     * jedis 연동
+     */
+    @Async
+    public CompletableFuture<Void> writeFileProcessingJedis(FileQueueModel fileQueueModel) throws JsonProcessingException {
+        String jsonString = objectMapper.writeValueAsString(fileQueueModel);
+        redisTemplate.opsForList().leftPush(REDIS_QUEUE_KEY, jsonString);
+        return CompletableFuture.completedFuture(null);
+    }
+
+    private FileQueueModel parseTaskJedis(String taskJson) throws JsonProcessingException {
+        System.out.println(taskJson);
+        return objectMapper.readValue(taskJson, FileQueueModel.class);
+    }
+
+    public void startTaskProcessorJedis() {
+        // TODO : 현재 단일 스레드 처리함 필요시 병렬 처리 필요 (현재는 큐 순서 보장으로 설정)
+        taskExecutor.execute(() -> {
+            while (true) {
+
+                try (Jedis jedis = jedisPool.getResource()) {
+                    while (true) {
+                        try {
+                            List<String> result = jedis.brpop(0, REDIS_QUEUE_KEY);
+                            if (result != null && result.size() > 1) {
+                                String taskJson = result.get(1);
+                                FileQueueModel task = parseTaskJedis(taskJson);
+                                processTask(task);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+            }
+        });
+    }
+
+
+
+
+
+
 
 
     /*
@@ -41,6 +94,8 @@ public class FileQueueService {
         redisTemplate.opsForList().leftPush(REDIS_QUEUE_KEY, fileQueueModel);
         return CompletableFuture.completedFuture(null);
     }
+
+
 
 
     /*

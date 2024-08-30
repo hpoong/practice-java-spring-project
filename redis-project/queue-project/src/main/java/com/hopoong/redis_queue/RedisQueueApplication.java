@@ -21,6 +21,7 @@ public class RedisQueueApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		fileQueueService.startTaskProcessor();
+//		fileQueueService.startTaskProcessor();
+		fileQueueService.startTaskProcessorJedis();
 	}
 }
