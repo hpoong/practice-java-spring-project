@@ -47,21 +47,20 @@ public class FileQueueService {
      * taskExecutor set.
      */
     public void startTaskProcessor() {
-        for (int i = 0; i < 10; i++) {
-            taskExecutor.execute(() -> {
-                while (true) {
-                    try {
-                        FileQueueModel task = (FileQueueModel) redisTemplate.opsForList().rightPop(REDIS_QUEUE_KEY);
-//                        AccountModel task = (AccountModel) redisTemplate.opsForList().rightPop(REDIS_QUEUE_KEY, 0, TimeUnit.SECONDS);
-                        if (task != null) {
-                            processTask(task);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+        // TODO : 현재 단일 스레드 처리함 필요시 병렬 처리 필요 (현재는 큐 순서 보장으로 설정)
+        taskExecutor.execute(() -> {
+            while (true) {
+                try {
+                    // FileQueueModel task = (FileQueueModel) redisTemplate.opsForList().righatPop(REDIS_QUEUE_KEY, 0, TimeUnit.SECONDS);
+                    FileQueueModel task = (FileQueueModel) redisTemplate.opsForList().rightPop(REDIS_QUEUE_KEY);
+                    if (task != null) {
+                        processTask(task);
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            });
-        }
+            }
+        });
     }
 
 
