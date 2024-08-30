@@ -1,6 +1,6 @@
-package com.hopoong.redis_queue.api.account.service;
+package com.hopoong.redis_queue.api.file.service;
 
-import com.hopoong.redis_queue.api.account.model.AccountModel;
+import com.hopoong.redis_queue.api.file.model.FileQueueModel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.task.TaskExecutor;
@@ -15,53 +15,46 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 
 
 @Service
 @RequiredArgsConstructor
-public class AccountService {
+public class FileQueueService {
 
     @Qualifier("redisQueueTaskExecutor")
     private final TaskExecutor taskExecutor;
 
-
-    private static final String REDIS_QUEUE_KEY = "accountUpdateQueue";
+    private static final String REDIS_QUEUE_KEY = "file:process";
 
     private final RedisTemplate<String, Object> redisTemplate;
 
 
 
-
     /*
      * CompletableFuture
-     * opsForList
-     * leftPush
      *
      * Redis 큐(accountUpdateQueue)에 추가 및 accountModel 객체를 넣음
      * → 큐에 추가.
      */
     @Async
-    public CompletableFuture<Void> updateAccountBalanceAsync(AccountModel accountModel) {
-        redisTemplate.opsForList().leftPush(REDIS_QUEUE_KEY, accountModel);
+    public CompletableFuture<Void> writeFileProcessing(FileQueueModel fileQueueModel) {
+        redisTemplate.opsForList().leftPush(REDIS_QUEUE_KEY, fileQueueModel);
         return CompletableFuture.completedFuture(null);
     }
 
 
-
+    /*
+     * taskExecutor set.
+     */
     public void startTaskProcessor() {
         for (int i = 0; i < 10; i++) {
             taskExecutor.execute(() -> {
                 while (true) {
                     try {
-//                        AccountModel task = (AccountModel) redisTemplate.opsForList().rightPop(REDIS_QUEUE_KEY);
+                        FileQueueModel task = (FileQueueModel) redisTemplate.opsForList().rightPop(REDIS_QUEUE_KEY);
 //                        AccountModel task = (AccountModel) redisTemplate.opsForList().rightPop(REDIS_QUEUE_KEY, 0, TimeUnit.SECONDS);
-
-                        AccountModel task = (AccountModel) redisTemplate.opsForList().rightPop(REDIS_QUEUE_KEY, 1, TimeUnit.SECONDS);
                         if (task != null) {
                             processTask(task);
-                        } else {
-                            Thread.sleep(1000);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -72,54 +65,33 @@ public class AccountService {
     }
 
 
-//    /*
-//     * rightPop
-//     */
-//    public void startTaskProcessor() {
-//        new Thread(() -> {
-//            while (true) {
-//                try {
-//                    AccountModel task = (AccountModel) redisTemplate.opsForList().rightPop(REDIS_QUEUE_KEY, 1, TimeUnit.SECONDS);
-//                    if (task != null) {
-//                        processTask(task);
-//                    } else {
-//                        Thread.sleep(1000);
-//                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }).start();
-//    }
-
-
-    private void processTask(AccountModel task) throws InterruptedException {
+    /*
+     * file 읽고 쓰기
+     */
+    private void processTask(FileQueueModel task) throws InterruptedException {
 
         synchronized(this) {
 
             Thread.sleep(5000); // 5초
 
-            // resources/task/task-file.txt 경로를 설정합니다.
             Path filePath = Paths.get("src/main/resources/task/task-file.txt");
 
-            // 추가할 데이터
-            String newData = task.getAccountId();
+            String newData = task.getQueueId();
 
             try {
 
-                // 마지막 줄에 개행 하고 데이터 추가
                 List<String> lines = Files.readAllLines(filePath);
 
                 try (BufferedWriter writer = Files.newBufferedWriter(filePath)) {
                     for (String line : lines) {
-                        writer.write(line);
                         writer.newLine();
+                        writer.write(line);
                     }
                     writer.newLine();
-                    writer.write(newData);
+                    writer.write(newData + "\n");
                 }
 
-                System.out.println("파일에 데이터를 성공적으로 추가했습니다.");
+                System.out.println("파일에 데이터를 성공적으로 추가했습니다 ::: " + newData);
             } catch (IOException e) {
                 e.printStackTrace();
             }
