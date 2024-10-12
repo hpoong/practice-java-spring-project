@@ -1,0 +1,15 @@
+services:
+  redis-master:
+    image: redis:7.2-alpine
+    container_name: redis-master
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./data:/data
+    command: ["redis-server", "--appendonly", "yes", "--replica-announce-ip", "[Master Server IP]"]
+    networks:
+      - redis-network
+
+networks:
+  redis-network:
+    driver: bridge
