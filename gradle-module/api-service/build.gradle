@@ -1,3 +1,5 @@
+
+
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.3.1'
@@ -5,18 +7,12 @@ plugins {
 }
 
 
-repositories {
-	mavenCentral()
-}
-
 dependencies {
 
 	implementation project(':core-service')
 
-
 	// springframework
 	implementation 'org.springframework.boot:spring-boot-starter-web'		// web
-
 
 	// test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

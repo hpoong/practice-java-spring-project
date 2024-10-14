@@ -7,20 +7,24 @@ plugins {
 	id 'io.spring.dependency-management' version '1.1.5'
 }
 
-repositories {
-	mavenCentral()
+//  bootJar 작업을 비활성화하여 실행 가능한 JAR 파일이 생성되지 않도록 설정. 이 설정은 주로 라이브러리 모듈이나 실행 파일이 필요 없는 경우에 사용
+tasks.withType(org.springframework.boot.gradle.tasks.bundling.BootJar) {
+	enabled = false
 }
+
 
 
 dependencies {
 
-	// springframework
 	implementation("org.springframework.boot:spring-boot-starter")
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 
+	runtimeOnly("com.h2database:h2")
 
-	// test
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	implementation("com.querydsl:querydsl-jpa:5.1.0:jakarta")
+	annotationProcessor("com.querydsl:querydsl-apt:5.1.0:jakarta")
+	annotationProcessor("jakarta.annotation:jakarta.annotation-api")
+	annotationProcessor("jakarta.persistence:jakarta.persistence-api")
 }
 
 tasks.named('test') {
