@@ -1,7 +1,7 @@
 
 
 server:
-  port: 2343
+  port: 7000
 
 
 logging:
