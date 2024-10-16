@@ -13,6 +13,7 @@ dependencies {
 
 	// springframework
 	implementation 'org.springframework.boot:spring-boot-starter-web'		// web
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa")	// jpa
 
 	// test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
