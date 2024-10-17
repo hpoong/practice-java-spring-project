@@ -36,3 +36,7 @@ out/
 logs/
 
 *.ini
+
+
+### docker volumes ###
+/redis-project/queue-project/docker-compose/redis/data/
