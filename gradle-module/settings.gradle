@@ -4,4 +4,4 @@
 
 
 rootProject.name = "gradle-service"
-include("core-service", "api-service", "auth-service")
+include("core-service", "user-service", "auth-service")
