@@ -1,0 +1,16 @@
+services:
+  mysql-master:
+    image: mysql:8.0
+    container_name: mysql-master
+    environment:
+      MYSQL_ROOT_PASSWORD: localpw
+      MYSQL_DATABASE: testdb
+    ports:
+      - "3306:3306"
+    command: --server-id=1
+    volumes:
+      - ./data:/var/lib/mysql
+      - ./back-up:/back-up
+networks:
+  mysql-network:
+    driver: bridge
