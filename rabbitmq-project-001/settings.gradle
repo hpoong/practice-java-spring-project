@@ -1,1 +1,6 @@
-rootProject.name = 'rabbitmq-project-001'
+rootProject.name = "rabbitmq-project-001"
+include(
+        "email-service",
+        "notification-service",
+        "user-service",
+)

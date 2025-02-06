@@ -1,0 +1,20 @@
+services:
+  postgres-slave:
+    image: postgres:15
+    container_name: postgres-slave
+    environment:
+      POSTGRES_USER: app_user
+      POSTGRES_PASSWORD: app_password
+      POSTGRES_DB: test_db
+      POSTGRES_REPLICATION_ROLE: replica
+      POSTGRES_REPLICATION_PRIMARY_HOST: postgres-master
+      POSTGRES_REPLICATION_PRIMARY_PORT: 5432
+      POSTGRES_REPLICATION_PRIMARY_USER: app_user
+      POSTGRES_REPLICATION_PRIMARY_PASSWORD: app_password
+    ports:
+      - "5434:5432"
+    volumes:
+      - ./data/slave:/var/lib/postgresql/data
+      - ./conf/slave:/etc/postgresql/conf.d
+    networks:
+      - postgres-network
