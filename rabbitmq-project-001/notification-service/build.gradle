@@ -26,6 +26,9 @@ dependencyManagement {
 
 dependencies {
 
+	implementation project(':core-service')
+
+
 	// springframework
 	implementation 'org.springframework.boot:spring-boot-starter-web'		// web
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'  // jpa

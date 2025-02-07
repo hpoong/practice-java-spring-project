@@ -25,6 +25,8 @@ spring:
 
 
   cloud:
+    function:
+      definition: consumeUserEmail
     stream:
       binders:
         rabbit-binder:
@@ -37,7 +39,8 @@ spring:
               password: localpw
               virtual-host: legacy
       bindings:
-        rabbit-binder-in:
+        consumeUserEmail-in-0:
           destination: user-topic
           binder: rabbit-binder
           group: email-group
+          contentType: application/json

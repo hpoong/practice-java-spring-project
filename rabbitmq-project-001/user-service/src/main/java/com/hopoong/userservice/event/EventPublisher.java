@@ -1,5 +1,6 @@
 package com.hopoong.userservice.event;
 
+import com.hopoong.coreservice.model.MessageModel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Component;
@@ -25,8 +26,8 @@ public class EventPublisher {
     }
 
     private void sendEvent(String eventType, Long userId) {
-        DispatcherMessageModel.DispatcherRabbitmq message =
-            DispatcherMessageModel.DispatcherRabbitmq.builder()
+        MessageModel.RabbitMessagePublisherModel message =
+            MessageModel.RabbitMessagePublisherModel.builder()
                 .userId(userId)
                 .systemType("rabbitmq")
                 .queueType(eventType)

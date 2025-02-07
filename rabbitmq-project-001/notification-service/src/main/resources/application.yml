@@ -24,6 +24,8 @@ spring:
         format_sql: true
 
   cloud:
+    function:
+      definition: consumeUserNotification
     stream:
       binders:
         rabbit-binder:
@@ -36,7 +38,8 @@ spring:
               password: localpw
               virtual-host: legacy
       bindings:
-        rabbit-binder-in:
+        consumeUserNotification-in-0:
           destination: user-topic
           binder: rabbit-binder
           group: notification-group
+          contentType: application/json

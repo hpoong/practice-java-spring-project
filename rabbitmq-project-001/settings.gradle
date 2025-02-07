@@ -3,4 +3,5 @@ include(
         "email-service",
         "notification-service",
         "user-service",
+        "core-service",
 )

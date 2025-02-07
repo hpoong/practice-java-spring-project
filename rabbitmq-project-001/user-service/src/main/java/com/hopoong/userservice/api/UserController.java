@@ -1,7 +1,7 @@
 package com.hopoong.userservice.api;
 
-import com.hopoong.userservice.response.CommonResponseCodeEnum;
-import com.hopoong.userservice.response.SuccessResponse;
+import com.hopoong.coreservice.response.CommonResponseCodeEnum;
+import com.hopoong.coreservice.response.SuccessResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

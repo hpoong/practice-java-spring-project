@@ -1,4 +1,4 @@
-package com.hopoong.emailservice.response;
+package com.hopoong.coreservice.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

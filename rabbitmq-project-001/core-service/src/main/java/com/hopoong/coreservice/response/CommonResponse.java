@@ -1,6 +1,6 @@
-package com.hopoong.userservice.response;
+package com.hopoong.coreservice.response;
 
-import com.hopoong.userservice.util.TimeUtil;
+import com.hopoong.coreservice.util.TimeUtil;
 import lombok.Getter;
 import lombok.Setter;
 

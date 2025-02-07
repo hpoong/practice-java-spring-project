@@ -1,4 +1,4 @@
-package com.hopoong.notificationservice.response;
+package com.hopoong.coreservice.response;
 
 import lombok.Getter;
 import lombok.Setter;

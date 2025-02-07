@@ -1,4 +1,4 @@
-package com.hopoong.userservice.response;
+package com.hopoong.coreservice.response;
 
 
 import lombok.Getter;

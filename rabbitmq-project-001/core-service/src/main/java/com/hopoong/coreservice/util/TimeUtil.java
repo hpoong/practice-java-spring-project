@@ -1,4 +1,4 @@
-package com.hopoong.emailservice.util;
+package com.hopoong.coreservice.util;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
