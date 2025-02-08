@@ -30,10 +30,6 @@ dependencies {
 
 	// springframework
 	implementation 'org.springframework.boot:spring-boot-starter-web'		// web
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'  // jpa
-
-	// database
-	runtimeOnly 'com.mysql:mysql-connector-j' // mysql
 
 	// Kafka
 	implementation 'org.springframework.cloud:spring-cloud-stream'

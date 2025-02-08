@@ -1,0 +1,14 @@
+
+
+
+✅ 1. 메시지 헤더(eventType) 추가하여 컨슈머에서 필터링 가능하도록 개선
+✅ 2. DLQ(user-notification-dlq) 설정 추가하여 메시지 손실 방지
+
+
+해야할 부분
+✅ ➕ 3. Retry (재시도) 정책 설정 최적화
+✅ ➕ 4. Auto Commit Offset 설정으로 메시지 처리 안정성 향상
+✅ ➕ 5. Dead Letter Exchange (DLX)를 사용한 보다 정교한 DLQ 관리
+✅ ➕ 6. Priority Queue 설정으로 긴급 메시지 우선 처리
+✅ ➕ 7. Message Expiration (TTL)을 활용하여 오래된 메시지 자동 삭제
+✅ ➕ 8. Poison Pill 방지: 특정 메시지가 무한 재시도 되지 않도록 설정
