@@ -1,4 +1,4 @@
-rootProject.name = "rabbitmq-project-001"
+rootProject.name = "rabbitmq-spring-cloud-stream"
 include(
         "email-service",
         "notification-service",
